@@ -15,8 +15,6 @@ python setup.py install
 
 if type "spoof-mac" > /dev/null; then
   echo "spoof-mac successfully installed!"
-  cd ..
-  rm -rf spoof-mac
 
 else
   echo "there was a problem installing spoof-mac. please check you have python and easy_install properly installed."
@@ -25,5 +23,8 @@ fi
 
 SPOOFMAC=`which spoof-mac`
 echo "spoof-mac is installed at $SPOOFMAC"
+
+cd ..
+rm -rf spoofmac
 
 exit 0

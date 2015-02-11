@@ -23,7 +23,7 @@ if ! type "spoof-mac" > /dev/null; then
   if type "spoof-mac" > /dev/null; then
     echo "spoof-mac successfully installed!"
     cd ..
-    rm -rf spoof-mac
+    rm -rf spoofmac
   else
     echo "there was a problem installing spoof-mac. please check you have python and easy_install properly installed."
   fi
