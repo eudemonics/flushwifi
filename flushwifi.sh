@@ -54,14 +54,14 @@ for i in $WIFINT
       echo "routes flushed"
     fi
     sleep 2
-    ifconfig $i mediaopt full-duplex
-    echo "interface $i running in full-duplex mode"
-    sleep 2
     ifconfig $i up
     if [ -n 0 ]; then
       echo "interface $i re-enabled"
     fi
     sleep 1
+    ifconfig $i mediaopt full-duplex
+    echo "interface $i running in full-duplex mode"
+    sleep 2
     if type "spoof-mac" > /dev/null; then
       spoof-mac randomize $i
       echo "MAC address randomized"
