@@ -41,6 +41,9 @@ for i in $WIFINT
       spoof-mac randomize $i
       echo "MAC address randomized"
       sleep 2
+    else
+      echo "spoof-mac is not installed. skipping MAC randomization."
+      echo "to install spoof-mac, git clone https://github.com/feross/spoofmac"
     fi
     ifconfig $i up
   done
