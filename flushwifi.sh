@@ -37,9 +37,11 @@ for i in $WIFINT
       echo "interface $i re-enabled"
     fi
     sleep 1
-    spoof-mac randomize $i
-    echo "MAC address randomized"
-    sleep 2
+    if type "spoof-mac" > /dev/null; then
+      spoof-mac randomize $i
+      echo "MAC address randomized"
+      sleep 2
+    fi
     ifconfig $i up
   done
 
