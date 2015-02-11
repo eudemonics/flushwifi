@@ -48,7 +48,9 @@ for i in $WIFINT
     ifconfig $i up
   done
 
-spoof-mac list
+if type "spoof-mac" > /dev/null; then
+  spoof-mac list
+fi
 sleep 2
 echo "Wi-Fi successfully restarted."
 
