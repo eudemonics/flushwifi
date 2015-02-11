@@ -44,6 +44,15 @@ WIFINT=`ifconfig -l | grep -oh en[1-9]`
 
 for i in $WIFINT
   do
+    if type "spoof-mac" > /dev/null; then
+      spoof-mac randomize $i
+      echo "MAC address randomized"
+      sleep 2
+    else
+      echo "spoof-mac is not installed. skipping MAC randomization."
+      echo "to install spoof-mac, git clone https://github.com/feross/spoofmac"
+    fi
+    sleep 2
     ifconfig $i down
     if [ -n 0 ]; then
       echo "interface $i temporarily disabled"
@@ -62,14 +71,6 @@ for i in $WIFINT
     ifconfig $i mediaopt full-duplex
     echo "interface $i running in full-duplex mode"
     sleep 2
-    if type "spoof-mac" > /dev/null; then
-      spoof-mac randomize $i
-      echo "MAC address randomized"
-      sleep 2
-    else
-      echo "spoof-mac is not installed. skipping MAC randomization."
-      echo "to install spoof-mac, git clone https://github.com/feross/spoofmac"
-    fi
     ifconfig $i up
   done
 
