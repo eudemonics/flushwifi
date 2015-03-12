@@ -32,52 +32,39 @@ else
   echo "spoof-mac found at $SPOOFMAC, no need to install!"
 fi
 
+WIFIDEV=`networksetup -listallhardwareports | grep -A 1 "Wi-Fi" | sed -ne 's/^.*Device: //p'`
+WIFIMAC=`networksetup -listallhardwareports | grep -A 2 "Wi-Fi" | sed -ne 's/^.*Address: //p'`
+
+echo ""
+echo "system Wi-Fi device found on $WIFIDEV with MAC address: $WIFIMAC"
+
 echo ""
 echo "refreshing wifi services.."
-sysctl -w net.inet.icmp.drop_redirect=1
-arp -a -d
-if [ -n 0 ]; then
+echo ""
+
+if (route -n flush); then
+  echo "routes flushed"
+fi
+
+if (sysctl -w net.inet.icmp.drop_redirect=1); then
+  echo "ICMP set to drop redirect packets"
+fi
+
+if (arp -a -d); then
   echo "ARP tables cleared"
 fi
 
-WIFINT=`ifconfig -l | grep -oh en[1-9]`
-
-for i in $WIFINT
-  do
-    if type "spoof-mac" > /dev/null; then
-      spoof-mac randomize $i
-      echo "MAC address randomized"
-      sleep 2
-    else
-      echo "spoof-mac is not installed. skipping MAC randomization."
-      echo "to install spoof-mac, git clone https://github.com/feross/spoofmac"
-    fi
-    sleep 2
-    ifconfig $i down
-    if [ -n 0 ]; then
-      echo "interface $i temporarily disabled"
-    fi
-    sleep 2
-    route -n flush
-    if [ -n 0 ]; then
-      echo "routes flushed"
-    fi
-    sleep 2
-    ifconfig $i up
-    if [ -n 0 ]; then
-      echo "interface $i re-enabled"
-    fi
-    sleep 1
-    ifconfig $i mediaopt full-duplex
-    echo "interface $i running in full-duplex mode"
-    sleep 2
-    ifconfig $i up
-  done
-
-if type "spoof-mac" > /dev/null; then
-  spoof-mac list
+if (spoof-mac randomize $WIFIDEV); then
+  echo "MAC address randomized for $WIFIDEV"
 fi
-sleep 2
-echo "Wi-Fi successfully restarted."
+sleep 1
 
+if (ifconfig $WIFIDEV mediaopt full-duplex); then
+  echo "interface $WIFIDEV running in full-duplex mode"
+fi
+spoof-mac list
+sleep 1
+ifconfig $WIFIDEV up
+echo ""
+echo "Wi-Fi successfully restarted."
 exit 0
