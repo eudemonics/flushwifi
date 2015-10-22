@@ -65,6 +65,13 @@ fi
 spoof-mac list
 sleep 1
 ifconfig $WIFIDEV up
+WIFISTATE=`ifconfig $WIFIDEV | grep status | sed -e 's/^.*status: //'`
+MYWIFI=`ifconfig $WIFIDEV | sed -ne 's/^.*inet//;s/ netmask.*$//p'`
+
+
+if [ "$WIFISTATE" == "active" ]; then
+  echo "local IP Address on en1: $MYWIFI"
+fi
 echo ""
 echo "Wi-Fi successfully restarted."
 exit 0
